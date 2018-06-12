@@ -21,8 +21,20 @@ export default `
     getUser(id: ID!): User!
   }
 
+  type Response {
+    success: Boolean!
+    token: String
+    errors: [Error]
+  }
+
+  type Error {
+    path: String!
+    message: String!
+  }
+
   type Mutation {
-    register(user: iUser!): User!
+    login(email: String!, password: String!): Response!
+    register(user: iUser!): Response!
     addFavPlace(placeId: ID!, userId: ID!): Boolean!
     removeFavPlace(placeId: ID!, userId: ID!): Boolean!
   }

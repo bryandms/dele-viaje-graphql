@@ -1,3 +1,7 @@
+import formatErrors from "../formatErrors.js";
+import auth from "../auth.js";
+import { isAuthenticatedResolver } from "../permissions.js";
+
 export default {
   User: {
     id: root => root.id,
@@ -11,15 +15,35 @@ export default {
   },
 
   Query: {
-    allUsers: async (root, args, { models }) => models.User.all(),
-    getUser: async (root, { id }, { models }) =>
+    allUsers: isAuthenticatedResolver.createResolver((root, args, { models }) =>
+      models.User.all()
+    ),
+
+    getUser: (root, { id }, { models }) =>
       models.User.findOne({ where: { id } })
   },
 
   Mutation: {
-    register: async (root, args, { models }) => models.User.create(args.user),
+    login: async (root, { email, password }, { models: { User }, SECRET }) =>
+      auth.login(email, password, User, SECRET),
 
-    addFavPlace: async (root, { placeId, userId }, { models }) =>
+    register: async (root, args, { models }) => {
+      try {
+        const user = await models.User.create(args.user);
+
+        return {
+          success: user && user.id,
+          errors: []
+        };
+      } catch (error) {
+        return {
+          success: false,
+          errors: formatErrors(error)
+        };
+      }
+    },
+
+    addFavPlace: (root, { placeId, userId }, { models }) =>
       models.sequelize
         .query("select add_fav_place(:placeId, :userId)", {
           replacements: { placeId, userId },
@@ -30,7 +54,7 @@ export default {
           return false;
         }),
 
-    removeFavPlace: async (root, { placeId, userId }, { models }) =>
+    removeFavPlace: (root, { placeId, userId }, { models }) =>
       models.sequelize
         .query("select remove_fav_place(:placeId, :userId)", {
           replacements: { placeId, userId },
