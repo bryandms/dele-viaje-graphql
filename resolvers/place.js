@@ -1,3 +1,5 @@
+import algorithms from "../algorithms";
+
 module.exports = {
   Place: {
     id: root => root.id,
@@ -18,25 +20,33 @@ module.exports = {
   },
 
   Query: {
-    allPlaces: async (root, args, { models }) => models.Place.findAll(),
+    allPlaces: (root, args, { models }) => models.Place.findAll(),
 
-    getPlace: async (root, { id }, { models }) =>
-      models.Place.findOne({ where: { id } })
+    getPlace: (root, { id }, { models }) =>
+      models.Place.findOne({ where: { id } }),
+
+    findPlaces: (root, args, { models }) =>
+      models.Place.findAll()
+        .then(places => {
+          return algorithms.euclidean(args.place, places);
+        })
+        .catch(error => {
+          return [];
+        })
   },
 
   Mutation: {
-    createPlace: async (root, args, { models }) =>
-      models.Place.create(args.place),
+    createPlace: (root, args, { models }) => models.Place.create(args.place),
 
-    updatePlace: async (root, args, { models }) =>
+    updatePlace: (root, args, { models }) =>
       models.Place.update(args.place, { where: { id: args.id } }).then(() =>
         models.Place.findOne({ where: { id: args.id } })
       ),
 
-    deletePlace: async (root, { id }, { models }) =>
+    deletePlace: (root, { id }, { models }) =>
       models.Place.destroy({ where: { id } }),
 
-    addService: async (root, { serviceId, placeId }, { models }) =>
+    addService: (root, { serviceId, placeId }, { models }) =>
       models.sequelize
         .query("select add_service(:serviceId, :placeId)", {
           replacements: { serviceId, placeId },
@@ -47,7 +57,7 @@ module.exports = {
           return false;
         }),
 
-    removeService: async (root, { serviceId, placeId }, { models }) =>
+    removeService: (root, { serviceId, placeId }, { models }) =>
       models.sequelize
         .query("select remove_service(:serviceId, :placeId)", {
           replacements: { serviceId, placeId },

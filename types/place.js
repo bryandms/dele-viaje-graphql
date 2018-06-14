@@ -40,9 +40,17 @@ export default `
     photos: JSON
   }
 
+  input findPlace {
+    province: String
+    accessibility: String
+    category: String
+    price: Float
+  }
+
   type Query {
     getPlace(id: ID!): Place!
     allPlaces: [Place]!
+    findPlaces(place: findPlace): [Place]!
   }
 
   type Mutation {
