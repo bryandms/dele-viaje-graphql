@@ -18,6 +18,7 @@ const sequelize = new Sequelize(database, username, password, {
 const models = {
   User: sequelize.import("./user"),
   Place: sequelize.import("./place"),
+  Role: sequelize.import("./role"),
   Service: sequelize.import("./service")
 };
 

@@ -11,6 +11,13 @@ export default {
         replacements: [id],
         model: models.Place,
         raw: true
+      }),
+
+    roles: ({ id }, args, { models }) =>
+      models.sequelize.query("select * from get_roles(?)", {
+        replacements: [id],
+        model: models.Role,
+        raw: true
       })
   },
 
@@ -58,6 +65,28 @@ export default {
       models.sequelize
         .query("select remove_fav_place(:placeId, :userId)", {
           replacements: { placeId, userId },
+          raw: true
+        })
+        .catch(err => {
+          console.log(err);
+          return false;
+        }),
+
+    addRole: (root, { roleId, userId }, { models }) =>
+      models.sequelize
+        .query("select add_role(:roleId, :userId)", {
+          replacements: { roleId, userId },
+          raw: true
+        })
+        .catch(err => {
+          console.log(err);
+          return false;
+        }),
+
+    removeRole: (root, { roleId, userId }, { models }) =>
+      models.sequelize
+        .query("select remove_role(:roleId, :userId)", {
+          replacements: { roleId, userId },
           raw: true
         })
         .catch(err => {

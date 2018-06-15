@@ -73,6 +73,14 @@ export default (sequelize, DataTypes) => {
         field: "user_id"
       }
     });
+
+    User.belongsToMany(models.Role, {
+      through: "user_roles",
+      foreignKey: {
+        name: "userId",
+        field: "user_id"
+      }
+    });
   };
 
   return User;

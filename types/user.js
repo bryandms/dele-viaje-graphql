@@ -6,6 +6,7 @@ export default `
     gender: String!
     age: Int
     favoritePlaces: [Place]!
+    roles: [Role]!
   }
 
   input iUser {
@@ -18,11 +19,12 @@ export default `
 
   type Query {
     allUsers: [User]!
-    getUser(id: ID!): User!
+    getUser(id: ID!): User
   }
 
   type Response {
     success: Boolean!
+    user: User
     token: String
     errors: [Error]
   }
@@ -37,5 +39,7 @@ export default `
     register(user: iUser!): Response!
     addFavPlace(placeId: ID!, userId: ID!): Boolean!
     removeFavPlace(placeId: ID!, userId: ID!): Boolean!
+    addRole(roleId: ID!, userId: ID!): Boolean!
+    removeRole(roleId: ID!, userId: ID!): Boolean!
   }
 `;
