@@ -9,16 +9,13 @@ let avgDistance = 0;
  * @returns {number} Distance between points.
  */
 function distance(pointX, pointY) {
-  if (!pointX || !pointY) return 0;
+  if (typeof pointX == "number" && pointX != 0)
+    if (!pointY) return Number.MAX_SAFE_INTEGER;
+    else return pointX - pointY;
 
-  if (
-    Number.isNaN(parseInt(pointX, 10)) &&
-    Number.isNaN(parseInt(pointY, 10))
-  ) {
-    return pointX.localeCompare(pointY) === 0 ? 0 : 1;
-  }
+  if (!pointX || !pointY) return 1;
 
-  return pointX - pointY;
+  return pointX.localeCompare(pointY) === 0 ? 0 : 1;
 }
 
 /**
