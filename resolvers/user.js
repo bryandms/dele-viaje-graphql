@@ -38,6 +38,18 @@ export default {
       try {
         const user = await models.User.create(args.user);
 
+        models.sequelize
+          .query("select add_role(:roleId, :userId)", {
+            replacements: { roleId: 3, userId: user.id },
+            raw: true
+          })
+          .catch(error => {
+            return {
+              success: false,
+              errors: formatErrors(error)
+            };
+          });
+
         return {
           success: user && user.id,
           errors: []
