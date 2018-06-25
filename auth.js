@@ -79,6 +79,7 @@ const auth = {
 
     return {
       success: true,
+      user,
       token: newToken,
       errors: []
     };
