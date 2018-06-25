@@ -2,21 +2,19 @@ export default `
   type Service {
     id: ID!
     name: String!
-    description: String!
     price: Float
-    iconClass: String
+    icon: String
     places: [Place]!
   }
 
   input iService {
     name: String!
-    description: String!
     price: Float = 0
-    iconClass: String
+    icon: String
   }
 
   type Query {
-    getService(id: ID!): Service!
+    getService(id: ID!): Service
     allServices: [Service]!
   }
 

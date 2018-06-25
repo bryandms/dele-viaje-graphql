@@ -69,15 +69,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.DOUBLE,
       default: 0
     },
-    numberOfVotes: {
-      field: "number_of_votes",
+    votes: {
       type: DataTypes.INTEGER,
       default: 0
     },
-    websiteUrl: {
-      field: "website_url",
-      type: DataTypes.STRING
-    },
+    website: DataTypes.STRING,
     phone: DataTypes.INTEGER,
     price: DataTypes.DOUBLE,
     email: DataTypes.STRING,

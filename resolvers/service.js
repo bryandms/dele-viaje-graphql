@@ -11,21 +11,22 @@ module.exports = {
   },
 
   Query: {
-    allServices: async (root, args, { models }) => models.Service.findAll(),
-    getService: async (root, { id }, { models }) =>
+    allServices: (root, args, { models }) => models.Service.findAll(),
+
+    getService: (root, { id }, { models }) =>
       models.Service.findOne({ where: { id } })
   },
 
   Mutation: {
-    createService: async (root, args, { models }) =>
+    createService: (root, args, { models }) =>
       models.Service.create(args.service),
 
-    updateService: async (root, args, { models }) =>
+    updateService: (root, args, { models }) =>
       models.Service.update(args.service, { where: { id: args.id } }).then(() =>
         models.Service.findOne({ where: { id: args.id } })
       ),
 
-    deleteService: async (root, { id }, { models }) =>
+    deleteService: (root, { id }, { models }) =>
       models.Service.destroy({ where: { id } })
   }
 };

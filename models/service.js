@@ -14,16 +14,6 @@ export default (sequelize, DataTypes) => {
         }
       }
     },
-    description: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: "El campo descripción es requerido."
-        }
-      }
-    },
     price: {
       type: DataTypes.FLOAT,
       allowNull: false,
@@ -34,10 +24,7 @@ export default (sequelize, DataTypes) => {
         }
       }
     },
-    iconClass: {
-      field: "icon_class",
-      type: DataTypes.STRING
-    }
+    icon: DataTypes.STRING
   });
 
   Service.associate = models => {

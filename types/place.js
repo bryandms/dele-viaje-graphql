@@ -11,8 +11,8 @@ export default `
     accessibility: String!
     category: String!
     score: Float
-    numberOfVotes: Int
-    websiteUrl: String
+    votes: Int
+    website: String
     phone: Int
     price: Float
     email: String
@@ -31,8 +31,8 @@ export default `
     accessibility: String!
     category: String!
     score: Float = 0
-    numberOfVotes: Int = 0
-    websiteUrl: String
+    votes: Int = 0
+    website: String
     phone: Int
     price: Float
     email: String
@@ -48,7 +48,7 @@ export default `
   }
 
   type Query {
-    getPlace(id: ID!): Place!
+    getPlace(id: ID!): Place
     allPlaces: [Place]!
     findPlaces(place: findPlace): [Place]!
   }
