@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
+import { apolloUploadExpress } from 'apollo-upload-server';
 import { fileLoader, mergeTypes, mergeResolvers } from "merge-graphql-schemas";
 import { makeExecutableSchema } from "graphql-tools";
 import path from "path";
@@ -34,6 +35,7 @@ app.use(auth.checkHeaders);
 app.use(
   "/graphql",
   bodyParser.json(),
+  apolloUploadExpress(),
   graphqlExpress(req => {
     return {
       schema,

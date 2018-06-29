@@ -1,4 +1,12 @@
 import algorithms from "../algorithms";
+import { storeFS, storeS3File } from '../helpers/filesystem';
+import mkdirp from 'mkdirp';
+import { GraphQLUpload } from 'apollo-upload-server';
+import AWS from 'aws-sdk';
+
+const UPLOAD_DIR = './uploads'
+// Ensure upload directory exists
+mkdirp.sync(UPLOAD_DIR);
 
 module.exports = {
   Place: {
@@ -18,6 +26,8 @@ module.exports = {
         raw: true
       })
   },
+
+  FileUpload: GraphQLUpload,
 
   Query: {
     allPlaces: (root, args, { models }) => models.Place.findAll(),
@@ -66,6 +76,19 @@ module.exports = {
         .catch(err => {
           console.log(err);
           return false;
-        })
+        }),
+
+    singleUpload: async (obj, { file: { file, placeId } }, { models: { Place } }) => {
+      const { stream, filename } = await file;
+      const newImage = await storeFS(stream, filename, UPLOAD_DIR);
+      let place = await Place.findOne({ where: { id: placeId } });
+      place.photos = [{ ...newImage }];
+      let updatedPlace = await place.save();
+      return {
+        id: updatedPlace.dataValues.photos[0].id,
+        path: updatedPlace.dataValues.photos[0].path,
+        filename: 'hey'
+      }
+    },
   }
 };

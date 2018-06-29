@@ -1,5 +1,6 @@
 export default `
   scalar JSON
+  scalar FileUpload
 
   type Place {
     id: ID!
@@ -20,6 +21,17 @@ export default `
     photos: JSON
     users: [User]!
     services: [Service]!
+  }
+
+  type FileResponse {
+    id: ID!
+    path: String!
+    filename: String!
+  }
+
+  input iFileUpload {
+    file: FileUpload,
+    placeId: Int
   }
 
   input iPlace {
@@ -59,5 +71,6 @@ export default `
     deletePlace(id: ID!): Boolean!
     addService(serviceId: ID!, placeId: ID!): Boolean!
     removeService(serviceId: ID!, placeId: ID!): Boolean!
+    singleUpload (file: iFileUpload): FileResponse!
   }
 `;
