@@ -1,109 +1,108 @@
-import formatErrors from "../formatErrors.js";
-import auth from "../auth.js";
-import { isAuthenticatedResolver } from "../permissions.js";
+const formatErrors = require('../helpers/formatErrors')
 
-export default {
+module.exports = {
   User: {
-    id: root => root.id,
-
-    favoritePlaces: ({ id }, args, { models }) =>
-      models.sequelize.query("select * from get_fav_places(?)", {
-        replacements: [id],
-        model: models.Place,
-        raw: true
-      }),
-
-    roles: ({ id }, args, { models }) =>
-      models.sequelize.query("select * from get_roles(?)", {
-        replacements: [id],
-        model: models.Role,
-        raw: true
-      })
+    places: async (parent, args, context, info) => await parent.getPlaces(),
+    roles: async (parent, args, context, info) => await parent.getRoles()
   },
 
   Query: {
-    allUsers: isAuthenticatedResolver.createResolver((root, args, { models }) =>
-      models.User.all()
-    ),
-
-    getUser: (root, { id }, { models }) =>
-      models.User.findOne({ where: { id } })
+    user: (parent, { id }, { db }, info) => db.User.findByPk(id),
+    users: (parent, args, { db }, info) => db.User.findAll()
   },
 
   Mutation: {
-    login: async (root, { email, password }, { models: { User }, SECRET }) =>
-      auth.login(email, password, User, SECRET),
-
-    register: async (root, args, { models }) => {
-      try {
-        const user = await models.User.create(args.user);
-
-        models.sequelize
-          .query("select add_role(:roleId, :userId)", {
-            replacements: { roleId: 3, userId: user.id },
-            raw: true
-          })
-          .catch(error => {
-            return {
-              success: false,
-              errors: formatErrors(error)
-            };
-          });
-
-        return {
-          success: user && user.id,
-          errors: []
-        };
-      } catch (error) {
-        return {
-          success: false,
-          errors: formatErrors(error)
-        };
-      }
+    login: (parent, args, { db }, info) => {
+      // TODO: implement the login with jwt
+      return false
     },
 
-    addFavPlace: (root, { placeId, userId }, { models }) =>
-      models.sequelize
-        .query("select add_fav_place(:placeId, :userId)", {
-          replacements: { placeId, userId },
-          raw: true
+    register: (parent, { user }, { db }, info) => {
+      return db.User.create(user)
+        .then((data) => {
+          return {
+            success: true,
+            data: [data],
+            errors: []
+          }
         })
-        .catch(err => {
-          console.log(err);
-          return false;
-        }),
+        .catch((err) => {
+          return {
+            success: false,
+            data: [],
+            errors: formatErrors(err)
+          }
+        })
+    },
 
-    removeFavPlace: (root, { placeId, userId }, { models }) =>
-      models.sequelize
-        .query("select remove_fav_place(:placeId, :userId)", {
-          replacements: { placeId, userId },
-          raw: true
+    addFavPlace: async (parent, { userId, placeId }, { db }, info) => {
+      const res = await db.User.findByPk(userId)
+        .then((user) => {
+          const res = user.addPlace(placeId)
+            .then(() => {
+              return true
+            })
+            .catch((err) => {
+              console.log('Error', err)
+              return false
+            })
+            return res
         })
-        .catch(err => {
-          console.log(err);
-          return false;
-        }),
+        .catch((err) => {
+          console.log('Error', err)
+          return false
+        })
 
-    addRole: (root, { roleId, userId }, { models }) =>
-      models.sequelize
-        .query("select add_role(:roleId, :userId)", {
-          replacements: { roleId, userId },
-          raw: true
-        })
-        .catch(err => {
-          console.log(err);
-          return false;
-        }),
+      return res
+    },
 
-    removeRole: (root, { roleId, userId }, { models }) =>
-      models.sequelize
-        .query("select remove_role(:roleId, :userId)", {
-          replacements: { roleId, userId },
-          raw: true
+    removeFavPlace: async (parent, { userId, placeId }, { db }, info) => {
+      const res = await db.User.findByPk(userId)
+        .then((user) => {
+          const res = user.removePlace(placeId)
+          return res
         })
-        .catch(err => {
-          console.log(err);
-          return false;
+        .catch((err) => {
+          console.log('Error', err)
+          return false
         })
+
+      return res
+    },
+
+    addRole: async (parent, { userId, roleId }, { db }, info) => {
+      const res = await db.User.findByPk(userId)
+        .then((user) => {
+          const res = user.addRole(roleId)
+            .then(() => {
+              return true
+            })
+            .catch((err) => {
+              console.log('Error', err)
+              return false
+            })
+            return res
+        })
+        .catch((err) => {
+          console.log('Error', err)
+          return false
+        })
+
+      return res
+    },
+
+    removeRole: async (parent, { userId, roleId }, { db }, info) => {
+      const res = await db.User.findByPk(userId)
+        .then((user) => {
+          const res = user.removeRole(roleId)
+          return res
+        })
+        .catch((err) => {
+          console.log('Error', err)
+          return false
+        })
+
+      return res
+    }
   }
-};
+}

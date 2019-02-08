@@ -1,32 +1,74 @@
+const formatErrors = require('../helpers/formatErrors')
+
 module.exports = {
   Service: {
-    id: root => root.id,
-
-    places: ({ id }, args, { models }) =>
-      models.sequelize.query("select * from get_places(?)", {
-        replacements: [id],
-        model: models.Place,
-        raw: true
-      })
+    places: async (parent, args, context, info) => await parent.getPlaces()
   },
 
   Query: {
-    allServices: (root, args, { models }) => models.Service.findAll(),
-
-    getService: (root, { id }, { models }) =>
-      models.Service.findOne({ where: { id } })
+    service: (parent, { id }, { db }, info) => db.Service.findByPk(id),
+    services: (parent, args, { db }, info) => db.Service.findAll()
   },
 
   Mutation: {
-    createService: (root, args, { models }) =>
-      models.Service.create(args.service),
+    createService: (parent, { service }, { db }, info) => {
+      return db.Service.create(service)
+        .then((data) => {
+          return {
+            success: true,
+            data: [data],
+            errors: []
+          }
+        })
+        .catch((err) => {
+          return {
+            success: false,
+            data: [],
+            errors: formatErrors(err)
+          }
+        })
+    },
 
-    updateService: (root, args, { models }) =>
-      models.Service.update(args.service, { where: { id: args.id } }).then(() =>
-        models.Service.findOne({ where: { id: args.id } })
-      ),
+    updateService: (parent, { id, service }, { db }, info) => {
+      return db.Service.update(
+          service,
+          {
+            returning: true,
+            where: { id }
+          }
+        )
+        .then(([id, [data]]) => {
+          return {
+            success: true,
+            data: [data],
+            errors: []
+          }
+        })
+        .catch((err) => {
+          return {
+            success: false,
+            data: [],
+            errors: formatErrors(err)
+          }
+        })
+    },
 
-    deleteService: (root, { id }, { models }) =>
-      models.Service.destroy({ where: { id } })
+    deleteService: (parent, { id }, { db }, info) => {
+      return db.Service.destroy({ where: { id } })
+        .then((data) => {
+          return {
+            success: data,
+            data: [],
+            errors: []
+          }
+        })
+        .catch((err) => {
+          return {
+            success: false,
+            data: [],
+            errors: formatErrors(err)
+          }
+        })
+    }
   }
-};
+}
