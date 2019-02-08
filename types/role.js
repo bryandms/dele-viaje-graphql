@@ -1,4 +1,4 @@
-export default `
+module.exports = `
   type Role {
     id: ID!
     name: String!
@@ -6,11 +6,11 @@ export default `
   }
 
   type Query {
-    allRoles: [Role]!
+    roles: [Role]!
   }
 
   type Mutation {
-    createRole(name: String!): Role!
-    deleteRole(id: ID!): Boolean!
+    createRole(name: String!): Response!
+    deleteRole(id: ID!): Response!
   }
-`;
+`

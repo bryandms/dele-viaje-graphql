@@ -1,11 +1,9 @@
-export default `
+module.exports = `
   type User {
     id: ID!
     username: String!
     email: String!
-    gender: String!
-    age: Int
-    favoritePlaces: [Place]!
+    places: [Place]!
     roles: [Role]!
   }
 
@@ -13,33 +11,19 @@ export default `
     username: String!
     email: String!
     password: String!
-    gender: String!
-    age: Int
   }
 
   type Query {
-    allUsers: [User]!
-    getUser(id: ID!): User
-  }
-
-  type Response {
-    success: Boolean!
-    user: User
-    token: String
-    errors: [Error]
-  }
-
-  type Error {
-    path: String!
-    message: String!
+    user(id: ID!): User
+    users: [User]!
   }
 
   type Mutation {
-    login(email: String!, password: String!): Response!
+    login(email: String!, password: String!): Boolean!
     register(user: iUser!): Response!
     addFavPlace(placeId: ID!, userId: ID!): Boolean!
     removeFavPlace(placeId: ID!, userId: ID!): Boolean!
     addRole(roleId: ID!, userId: ID!): Boolean!
     removeRole(roleId: ID!, userId: ID!): Boolean!
   }
-`;
+`
