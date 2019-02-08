@@ -1,103 +1,107 @@
-export default (sequelize, DataTypes) => {
-  const Place = sequelize.define("place", {
-    name: {
-      type: DataTypes.STRING,
-      unique: {
-        args: true,
-        msg: "Este nombre ya se encuentra registrado."
+module.exports = (sequelize, DataTypes) => {
+  const Place = sequelize.define('place', {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
       },
-      allowNull: false,
-      validate: {
-        notEmpty: {
+      name: {
+        type: DataTypes.STRING,
+        unique: {
           args: true,
-          msg: "El nombre es requerido."
+          msg: 'Este nombre ya se encuentra registrado.'
+        },
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: 'El nombre es requerido.'
+          }
         }
-      }
-    },
-    description: DataTypes.STRING,
-    latitude: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-      validate: {
-        isFloat: {
-          args: true,
-          msg: "La latitud no es válida."
+      },
+      description: DataTypes.STRING,
+      latitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        validate: {
+          isFloat: {
+            args: true,
+            msg: 'La latitud no es válida.'
+          }
         }
-      }
-    },
-    longitude: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-      validate: {
-        isFloat: {
-          args: true,
-          msg: "La longitud no es válida."
+      },
+      longitude: {
+        type: DataTypes.FLOAT,
+        allowNull: false,
+        validate: {
+          isFloat: {
+            args: true,
+            msg: 'La longitud no es válida.'
+          }
         }
-      }
-    },
-    province: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: "La provincia es requerida."
+      },
+      province: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: 'La provincia es requerida.'
+          }
         }
-      }
-    },
-    accessibility: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: "La accesibilidad es requerida."
+      },
+      accessibility: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: 'La accesibilidad es requerida.'
+          }
         }
-      }
-    },
-    category: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: {
-          args: true,
-          msg: "La categoría es requerida."
+      },
+      category: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: 'La categoría es requerida.'
+          }
         }
-      }
+      },
+      score: {
+        type: DataTypes.DOUBLE,
+        default: 0
+      },
+      votes: {
+        type: DataTypes.INTEGER,
+        default: 0
+      },
+      website: DataTypes.STRING,
+      phone: DataTypes.INTEGER,
+      email: DataTypes.STRING,
+      schedule: DataTypes.JSON,
+      photos: DataTypes.JSON
     },
-    score: {
-      type: DataTypes.DOUBLE,
-      default: 0
-    },
-    votes: {
-      type: DataTypes.INTEGER,
-      default: 0
-    },
-    website: DataTypes.STRING,
-    phone: DataTypes.INTEGER,
-    price: DataTypes.DOUBLE,
-    email: DataTypes.STRING,
-    schedule: DataTypes.JSON,
-    photos: DataTypes.JSON
-  });
+    {
+      freezeTableName: true
+    }
+  )
 
-  Place.associate = models => {
+  Place.associate = (models) => {
     Place.belongsToMany(models.User, {
-      through: "favorite_places",
-      foreignKey: {
-        name: "placeId",
-        field: "place_id"
-      }
-    });
+      through: 'UserPlaces',
+      as: 'users',
+      foreignKey: 'UserId'
+    })
 
     Place.belongsToMany(models.Service, {
-      through: "place_services",
-      foreignKey: {
-        name: "placeId",
-        field: "place_id"
-      }
-    });
-  };
+      through: 'PlaceServices',
+      as: 'services',
+      foreignKey: 'ServiceId'
+    })
+  }
 
-  return Place;
-};
+  return Place
+}

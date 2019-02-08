@@ -1,41 +1,38 @@
-export default (sequelize, DataTypes) => {
-  const Service = sequelize.define("service", {
-    name: {
-      type: DataTypes.STRING,
-      unique: {
-        args: true,
-        msg: "Este nombre ya se encuentra registrado."
+module.exports = (sequelize, DataTypes) => {
+  const Service = sequelize.define('service', {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
       },
-      allowNull: false,
-      validate: {
-        notEmpty: {
+      name: {
+        type: DataTypes.STRING,
+        unique: {
           args: true,
-          msg: "El nombre es requerido."
+          msg: 'Este nombre ya se encuentra registrado.'
+        },
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: 'El nombre es requerido.'
+          }
         }
-      }
+      },
+      icon: DataTypes.STRING
     },
-    price: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-      validate: {
-        isFloat: {
-          args: true,
-          msg: "El precio no es válido."
-        }
-      }
-    },
-    icon: DataTypes.STRING
-  });
+    {
+      freezeTableName: true
+    }
+  )
 
-  Service.associate = models => {
+  Service.associate = (models) => {
     Service.belongsToMany(models.Place, {
-      through: "place_services",
-      foreignKey: {
-        name: "serviceId",
-        field: "service_id"
-      }
-    });
-  };
+      through: 'PlaceServices',
+      as: 'places',
+      foreignKey: 'PlaceId'
+    })
+  }
 
-  return Service;
-};
+  return Service
+}

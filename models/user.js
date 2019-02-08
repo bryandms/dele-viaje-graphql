@@ -1,20 +1,23 @@
-import bcrypt from "bcrypt";
+const bcrypt = require('bcrypt')
 
-export default (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    "user",
-    {
+module.exports = (sequelize, DataTypes) => {
+  const User = sequelize.define('user', {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+      },
       username: {
         type: DataTypes.STRING,
         unique: {
           args: true,
-          msg: "Este username ya se encuentra registrado."
+          msg: 'Este username ya se encuentra registrado.'
         },
         allowNull: false,
         validate: {
           notEmpty: {
             args: true,
-            msg: "El username es requerido."
+            msg: 'El username es requerido.'
           }
         }
       },
@@ -22,17 +25,17 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: {
           args: true,
-          msg: "Este correo ya se encuentra registrado."
+          msg: 'Este correo ya se encuentra registrado.'
         },
         allowNull: false,
         validate: {
           notEmpty: {
             args: true,
-            msg: "El correo es requerido."
+            msg: 'El correo es requerido.'
           },
           isEmail: {
             args: true,
-            msg: "El correo no es válido."
+            msg: 'El correo no es válido.'
           }
         }
       },
@@ -42,46 +45,37 @@ export default (sequelize, DataTypes) => {
         validate: {
           notEmpty: {
             args: true,
-            msg: "La contraseña es requerida."
+            msg: 'La contraseña es requerida.'
           }
         }
-      },
-      gender: {
-        type: DataTypes.ENUM("M", "F"),
-        allowNull: false
-      },
-      age: {
-        type: DataTypes.INTEGER,
-        allowNull: true
       }
     },
     {
       hooks: {
         afterValidate: async user => {
-          const hashedPassword = await bcrypt.hash(user.password, 12);
-          user.password = hashedPassword;
+          const hashedPassword = await bcrypt.hash(user.password, 12)
+          user.password = hashedPassword
         }
       }
+    },
+    {
+      freezeTableName: true
     }
-  );
+  )
 
-  User.associate = models => {
+  User.associate = (models) => {
     User.belongsToMany(models.Place, {
-      through: "favorite_places",
-      foreignKey: {
-        name: "userId",
-        field: "user_id"
-      }
-    });
+      through: 'UserPlaces',
+      as: 'places',
+      foreignKey: 'PlaceId'
+    })
 
     User.belongsToMany(models.Role, {
-      through: "user_roles",
-      foreignKey: {
-        name: "userId",
-        field: "user_id"
-      }
-    });
-  };
+      through: 'UserRoles',
+      as: 'roles',
+      foreignKey: 'RoleId'
+    })
+  }
 
-  return User;
-};
+  return User
+}

@@ -1,30 +1,37 @@
-export default (sequelize, DataTypes) => {
-  const Role = sequelize.define("role", {
-    name: {
-      type: DataTypes.STRING,
-      unique: {
-        args: true,
-        msg: "Este rol ya se encuentra registrado."
+module.exports = (sequelize, DataTypes) => {
+  const Role = sequelize.define('role', {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
       },
-      allowNull: false,
-      validate: {
-        notEmpty: {
+      name: {
+        type: DataTypes.STRING,
+        unique: {
           args: true,
-          msg: "El rol es requerido."
+          msg: 'Este nombre ya se encuentra registrado.'
+        },
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: 'El nombre es requerido.'
+          }
         }
       }
+    },
+    {
+      freezeTableName: true
     }
-  });
+  )
 
-  Role.associate = models => {
+  Role.associate = (models) => {
     Role.belongsToMany(models.User, {
-      through: "user_roles",
-      foreignKey: {
-        name: "roleId",
-        field: "role_id"
-      }
-    });
-  };
+      through: 'UserRoles',
+      as: 'users',
+      foreignKey: 'UserId'
+    })
+  }
 
-  return Role;
-};
+  return Role
+}
