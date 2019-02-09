@@ -65,15 +65,15 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.belongsToMany(models.Place, {
-      through: 'UserPlaces',
+      through: models.UserPlaces,
       as: 'places',
-      foreignKey: 'PlaceId'
+      foreignKey: 'placeId'
     })
 
     User.belongsToMany(models.Role, {
       through: 'UserRoles',
       as: 'roles',
-      foreignKey: 'RoleId'
+      foreignKey: 'roleId'
     })
   }
 

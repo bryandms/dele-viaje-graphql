@@ -91,15 +91,15 @@ module.exports = (sequelize, DataTypes) => {
 
   Place.associate = (models) => {
     Place.belongsToMany(models.User, {
-      through: 'UserPlaces',
+      through: models.UserPlaces,
       as: 'users',
-      foreignKey: 'UserId'
+      foreignKey: 'userId'
     })
 
     Place.belongsToMany(models.Service, {
       through: 'PlaceServices',
       as: 'services',
-      foreignKey: 'ServiceId'
+      foreignKey: 'serviceId'
     })
   }
 

@@ -15,7 +15,8 @@ const db = {
   User: sequelize.import('./user'),
   Place: sequelize.import('./place'),
   Role: sequelize.import('./role'),
-  Service: sequelize.import('./service')
+  Service: sequelize.import('./service'),
+  UserPlaces: sequelize.import('./userPlaces')
 }
 
 Object.keys(db).forEach((modelName) => {

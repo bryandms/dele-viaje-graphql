@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     Role.belongsToMany(models.User, {
       through: 'UserRoles',
       as: 'users',
-      foreignKey: 'UserId'
+      foreignKey: 'userId'
     })
   }
 

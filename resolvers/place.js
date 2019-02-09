@@ -3,7 +3,11 @@ const formatErrors = require('../helpers/formatErrors')
 module.exports = {
   Place: {
     users: async (parent, args, context, info) => await parent.getUsers(),
-    services: async (parent, args, context, info) => await parent.getServices()
+    services: async (parent, args, context, info) => await parent.getServices(),
+    userPlaces: async (parent, args, context, info) => await parent.getUsers()
+      .then(users => {
+        return users.map(user => user.dataValues.UserPlaces)
+      })
   },
 
   Query: {

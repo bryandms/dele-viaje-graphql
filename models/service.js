@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
     Service.belongsToMany(models.Place, {
       through: 'PlaceServices',
       as: 'places',
-      foreignKey: 'PlaceId'
+      foreignKey: 'placeId'
     })
   }
 

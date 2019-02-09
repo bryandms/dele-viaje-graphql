@@ -3,7 +3,11 @@ const formatErrors = require('../helpers/formatErrors')
 module.exports = {
   User: {
     places: async (parent, args, context, info) => await parent.getPlaces(),
-    roles: async (parent, args, context, info) => await parent.getRoles()
+    roles: async (parent, args, context, info) => await parent.getRoles(),
+    userPlaces: async (parent, args, context, info) => await parent.getPlaces()
+      .then(places => {
+        return places.map(place => place.dataValues.UserPlaces)
+      })
   },
 
   Query: {
@@ -38,7 +42,7 @@ module.exports = {
     addFavPlace: async (parent, { userId, placeId }, { db }, info) => {
       const res = await db.User.findByPk(userId)
         .then((user) => {
-          const res = user.addPlace(placeId)
+          const res = user.addPlace(placeId, { through: { rating: 0.0 }})
             .then(() => {
               return true
             })
@@ -68,6 +72,21 @@ module.exports = {
         })
 
       return res
+    },
+
+    setRating: async (parent, { userPlacesId, rating }, { db }, info) => {
+      return await db.UserPlaces.update(
+        { rating },
+        {
+          returning: true,
+          where: { id: userPlacesId }
+        }
+      )
+      .then(([id, [data]]) => data.rating)
+      .catch((err) => {
+        console.log('Error', err)
+        return -1
+      })
     },
 
     addRole: async (parent, { userId, roleId }, { db }, info) => {

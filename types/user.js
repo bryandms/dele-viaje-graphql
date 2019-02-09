@@ -5,6 +5,7 @@ module.exports = `
     email: String!
     places: [Place]!
     roles: [Role]!
+    userPlaces: [UserPlaces]!
   }
 
   input iUser {
@@ -23,6 +24,7 @@ module.exports = `
     register(user: iUser!): Response!
     addFavPlace(placeId: ID!, userId: ID!): Boolean!
     removeFavPlace(placeId: ID!, userId: ID!): Boolean!
+    setRating(userPlacesId: ID!, rating: Float!): Float!
     addRole(roleId: ID!, userId: ID!): Boolean!
     removeRole(roleId: ID!, userId: ID!): Boolean!
   }

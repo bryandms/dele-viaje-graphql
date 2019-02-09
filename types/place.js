@@ -19,6 +19,7 @@ module.exports = `
     photos: JSON
     users: [User]!
     services: [Service]!
+    userPlaces: [UserPlaces]!
   }
 
   input iPlace {
