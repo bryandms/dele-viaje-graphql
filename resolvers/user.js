@@ -1,4 +1,5 @@
 const formatErrors = require('../helpers/formatErrors')
+const { login } = require('../helpers/auth')
 
 module.exports = {
   User: {
@@ -16,10 +17,7 @@ module.exports = {
   },
 
   Mutation: {
-    login: (parent, args, { db }, info) => {
-      // TODO: implement the login with jwt
-      return false
-    },
+    login: (parent, { email, password }, { db }, info) => login(email, password, db.User),
 
     register: (parent, { user }, { db }, info) => {
       return db.User.create(user)

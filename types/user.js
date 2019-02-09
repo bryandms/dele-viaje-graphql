@@ -20,7 +20,7 @@ module.exports = `
   }
 
   type Mutation {
-    login(email: String!, password: String!): Boolean!
+    login(email: String!, password: String!): Response!
     register(user: iUser!): Response!
     addFavPlace(placeId: ID!, userId: ID!): Boolean!
     removeFavPlace(placeId: ID!, userId: ID!): Boolean!

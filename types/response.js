@@ -4,6 +4,7 @@ module.exports = `
   type Response {
     success: Boolean!
     data: [Data]
+    token: String
     errors: [Error]
   }
 
