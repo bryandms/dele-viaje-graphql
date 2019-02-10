@@ -1,5 +1,6 @@
 const formatErrors = require('../helpers/formatErrors')
 const { isAuthenticatedResolver } = require('../helpers/permissions')
+const euclidean = require('../helpers/euclideanDistanceAlgorithm')
 
 module.exports = {
   Place: {
@@ -48,7 +49,24 @@ module.exports = {
               errors: formatErrors(err)
             }
           })
-    )
+    ),
+
+    findPlaces: (parent, { place }, { db }, info) =>
+      db.Place.findAll()
+        .then(places => {
+          return {
+            success: true,
+            data: euclidean(place, places),
+            errors: []
+          }
+        })
+        .catch(err => {
+          return {
+            success: false,
+            data: [],
+            errors: formatErrors(err)
+          }
+        })
   },
 
   Mutation: {

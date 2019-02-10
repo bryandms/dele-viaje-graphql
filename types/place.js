@@ -39,9 +39,16 @@ module.exports = `
     photos: JSON
   }
 
+  input iFindPlace {
+    province: String
+    accessibility: String
+    category: String
+  }
+
   type Query {
     place(id: ID!): SingleResponse!
     places: Response!
+    findPlaces(place: iFindPlace): Response!
   }
 
   type Mutation {
