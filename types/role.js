@@ -6,11 +6,11 @@ module.exports = `
   }
 
   type Query {
-    roles: [Role]!
+    roles: Response!
   }
 
   type Mutation {
-    createRole(name: String!): Response!
-    deleteRole(id: ID!): Response!
+    createRole(name: String!): SingleResponse!
+    deleteRole(id: ID!): SingleResponse!
   }
 `

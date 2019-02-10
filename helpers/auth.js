@@ -22,7 +22,7 @@ const auth = {
     if (!user) {
       return {
         success: false,
-        data: [],
+        data: null,
         errors: [{
           path: 'email',
           message: 'Las credenciales son incorrectas.'
@@ -35,7 +35,7 @@ const auth = {
     if (!validPassword) {
       return {
         success: false,
-        data: [],
+        data: null,
         errors: [{
           path: 'email',
           message: 'Las credenciales son incorrectas.'
@@ -47,7 +47,7 @@ const auth = {
 
     return {
       success: true,
-      data: [],
+      data: null,
       errors: [],
       token
     }

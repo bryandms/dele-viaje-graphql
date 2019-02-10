@@ -15,17 +15,17 @@ module.exports = `
   }
 
   type Query {
-    user(id: ID!): User
-    users: [User]!
+    user(id: ID!): SingleResponse!
+    users: Response!
   }
 
   type Mutation {
-    login(email: String!, password: String!): Response!
-    register(user: iUser!): Response!
-    addFavPlace(placeId: ID!, userId: ID!): Boolean!
-    removeFavPlace(placeId: ID!, userId: ID!): Boolean!
-    setRating(userPlacesId: ID!, rating: Float!): Float!
-    addRole(roleId: ID!, userId: ID!): Boolean!
-    removeRole(roleId: ID!, userId: ID!): Boolean!
+    login(email: String!, password: String!): SingleResponse!
+    register(user: iUser!): SingleResponse!
+    addFavPlace(placeId: ID!, userId: ID!): SingleResponse!
+    removeFavPlace(placeId: ID!, userId: ID!): SingleResponse!
+    setRating(userPlacesId: ID!, rating: Float!): SingleResponse!
+    addRole(roleId: ID!, userId: ID!): SingleResponse!
+    removeRole(roleId: ID!, userId: ID!): SingleResponse!
   }
 `

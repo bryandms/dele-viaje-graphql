@@ -1,4 +1,5 @@
 const formatErrors = require('../helpers/formatErrors')
+const { isAuthenticatedResolver } = require('../helpers/permissions')
 
 module.exports = {
   Role: {
@@ -6,44 +7,63 @@ module.exports = {
   },
 
   Query: {
-    roles: (parent, args, { db }, info) => db.Role.findAll()
+    roles: isAuthenticatedResolver.createResolver(
+      async (parent, args, { db }, info) =>
+        db.Role.findAll()
+          .then(data => {
+            return {
+              success: true,
+              data,
+              errors: []
+            }
+          })
+          .catch(err => {
+            return {
+              success: false,
+              data: [],
+              errors: formatErrors(err)
+            }
+          })
+    )
   },
 
   Mutation: {
-    createRole: (parent, args, { db }, info) => {
-      return db.Role.create(args)
-        .then((data) => {
-          return {
-            success: true,
-            data: [data],
-            errors: []
-          }
-        })
-        .catch((err) => {
-          return {
-            success: false,
-            data: [],
-            errors: formatErrors(err)
-          }
-        })
-    },
+    createRole: isAuthenticatedResolver.createResolver(
+      (parent, args, { db }, info) =>
+        db.Role.create(args)
+          .then(data => {
+            return {
+              success: true,
+              data,
+              errors: []
+            }
+          })
+          .catch(err => {
+            return {
+              success: false,
+              data: null,
+              errors: formatErrors(err)
+            }
+          })
+    ),
 
-    deleteRole: (parent, { id }, { db }, info) => {
-      return db.Role.destroy({ where: { id } })
-        .then((data) => {
-          return {
-            success: data,
-            data: [],
-            errors: []
-          }
-        })
-        .catch((err) => {
-          return {
-            success: false,
-            data: [],
-            errors: formatErrors(err)
-          }
-        })
-    }
+    deleteRole: isAuthenticatedResolver.createResolver(
+      (parent, { id }, { db }, info) =>
+        db.Role.destroy({ where: { id } })
+          .then(data => {
+            return {
+              success: data,
+              data: null,
+              errors: []
+            }
+          })
+          .catch(err => {
+            return {
+              success: false,
+              data: null,
+              errors: formatErrors(err)
+            }
+          })
+    )
   }
 }

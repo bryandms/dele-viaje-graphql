@@ -40,15 +40,15 @@ module.exports = `
   }
 
   type Query {
-    place(id: ID!): Place
-    places: [Place]!
+    place(id: ID!): SingleResponse!
+    places: Response!
   }
 
   type Mutation {
-    createPlace(place: iPlace!): Response!
-    updatePlace(id: ID!, place: iPlace!): Response!
-    deletePlace(id: ID!): Response!
-    addService(serviceId: ID!, placeId: ID!): Boolean!
-    removeService(serviceId: ID!, placeId: ID!): Boolean!
+    createPlace(place: iPlace!): SingleResponse!
+    updatePlace(id: ID!, place: iPlace!): SingleResponse!
+    deletePlace(id: ID!): SingleResponse!
+    addService(serviceId: ID!, placeId: ID!): SingleResponse!
+    removeService(serviceId: ID!, placeId: ID!): SingleResponse!
   }
 `

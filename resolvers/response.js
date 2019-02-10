@@ -6,6 +6,7 @@ module.exports = {
       else if (name == 'role') return 'Role'
       else if (name == 'service') return 'Service'
       else if (name == 'user') return 'User'
+      else if (name == 'UserPlace') return 'UserPlaces'
     }
   }
 }

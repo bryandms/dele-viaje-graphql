@@ -1,4 +1,5 @@
 const formatErrors = require('../helpers/formatErrors')
+const { isAuthenticatedResolver } = require('../helpers/permissions')
 const { login } = require('../helpers/auth')
 
 module.exports = {
@@ -12,114 +13,176 @@ module.exports = {
   },
 
   Query: {
-    user: (parent, { id }, { db }, info) => db.User.findByPk(id),
-    users: (parent, args, { db }, info) => db.User.findAll()
+    user: isAuthenticatedResolver.createResolver(
+      (parent, { id }, { db }, info) =>
+        db.User.findByPk(id)
+          .then(data => {
+            return {
+              success: true,
+              data: data,
+              errors: []
+            }
+          })
+          .catch(err => {
+            return {
+              success: false,
+              data: null,
+              errors: formatErrors(err)
+            }
+          })
+    ),
+
+    users: isAuthenticatedResolver.createResolver(
+      (parent, args, { db }, info) =>
+        db.User.findAll()
+          .then(data => {
+            return {
+              success: true,
+              data: data,
+              errors: []
+            }
+          })
+          .catch(err => {
+            return {
+              success: false,
+              data: [],
+              errors: formatErrors(err)
+            }
+          })
+      )
   },
 
   Mutation: {
     login: (parent, { email, password }, { db }, info) => login(email, password, db.User),
 
-    register: (parent, { user }, { db }, info) => {
-      return db.User.create(user)
-        .then((data) => {
+    register: (parent, { user }, { db }, info) =>
+      db.User.create(user)
+        .then(data => {
           return {
             success: true,
-            data: [data],
+            data: data,
             errors: []
           }
         })
-        .catch((err) => {
+        .catch(err => {
           return {
             success: false,
-            data: [],
+            data: null,
             errors: formatErrors(err)
           }
-        })
-    },
+        }),
 
-    addFavPlace: async (parent, { userId, placeId }, { db }, info) => {
-      const res = await db.User.findByPk(userId)
-        .then((user) => {
-          const res = user.addPlace(placeId, { through: { rating: 0.0 }})
+    addFavPlace: async (parent, { userId, placeId }, { db }, info) =>
+      await db.User.findByPk(userId)
+        .then(user =>
+          user.addPlace(placeId, { through: { rating: 0.0 }})
             .then(() => {
-              return true
+              return {
+                success: true,
+                data: null,
+                errors: []
+              }
             })
-            .catch((err) => {
-              console.log('Error', err)
-              return false
+            .catch(err => {
+              return {
+                success: false,
+                data: null,
+                errors: formatErrors(err)
+              }
             })
-            return res
-        })
-        .catch((err) => {
-          console.log('Error', err)
-          return false
-        })
+        )
+        .catch(err => {
+          return {
+            success: false,
+            data: null,
+            errors: formatErrors(err)
+          }
+        }),
 
-      return res
-    },
-
-    removeFavPlace: async (parent, { userId, placeId }, { db }, info) => {
-      const res = await db.User.findByPk(userId)
-        .then((user) => {
+    removeFavPlace: async (parent, { userId, placeId }, { db }, info) =>
+      await db.User.findByPk(userId)
+        .then(user => {
           const res = user.removePlace(placeId)
-          return res
+          return {
+            success: res,
+            data: null,
+            errors: []
+          }
         })
-        .catch((err) => {
-          console.log('Error', err)
-          return false
-        })
+        .catch(err => {
+          return {
+            success: false,
+            data: null,
+            errors: formatErrors(err)
+          }
+        }),
 
-      return res
-    },
-
-    setRating: async (parent, { userPlacesId, rating }, { db }, info) => {
-      return await db.UserPlaces.update(
+    setRating: async (parent, { userPlacesId, rating }, { db }, info) =>
+      await db.UserPlaces.update(
         { rating },
         {
           returning: true,
           where: { id: userPlacesId }
         }
       )
-      .then(([id, [data]]) => data.rating)
-      .catch((err) => {
-        console.log('Error', err)
-        return -1
-      })
-    },
+        .then(([id, [userPlace]]) => {
+          return {
+            success: true,
+            data: userPlace,
+            errors: []
+          }
+        })
+        .catch(err => {
+          return {
+            success: false,
+            data: null,
+            errors: formatErrors(err)
+          }
+        }),
 
-    addRole: async (parent, { userId, roleId }, { db }, info) => {
-      const res = await db.User.findByPk(userId)
-        .then((user) => {
-          const res = user.addRole(roleId)
+    addRole: async (parent, { userId, roleId }, { db }, info) =>
+      await db.User.findByPk(userId)
+        .then(user =>
+          user.addRole(roleId)
             .then(() => {
-              return true
+              return {
+                success: true,
+                data: null,
+                errors: []
+              }
             })
-            .catch((err) => {
-              console.log('Error', err)
-              return false
+            .catch(err => {
+              return {
+                success: false,
+                data: null,
+                errors: formatErrors(err)
+              }
             })
-            return res
-        })
-        .catch((err) => {
-          console.log('Error', err)
-          return false
-        })
+        )
+        .catch(err => {
+          return {
+            success: false,
+            data: null,
+            errors: formatErrors(err)
+          }
+        }),
 
-      return res
-    },
-
-    removeRole: async (parent, { userId, roleId }, { db }, info) => {
-      const res = await db.User.findByPk(userId)
-        .then((user) => {
+    removeRole: async (parent, { userId, roleId }, { db }, info) =>
+      await db.User.findByPk(userId)
+        .then(user => {
           const res = user.removeRole(roleId)
-          return res
+          return {
+            success: res,
+            data: null,
+            errors: []
+          }
         })
-        .catch((err) => {
-          console.log('Error', err)
-          return false
+        .catch(err => {
+          return {
+            success: false,
+            data: null,
+            errors: formatErrors(err)
+          }
         })
-
-      return res
-    }
   }
 }

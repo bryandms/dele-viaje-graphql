@@ -12,13 +12,13 @@ module.exports = `
   }
 
   type Query {
-    service(id: ID!): Service
-    services: [Service]!
+    service(id: ID!): SingleResponse!
+    services: Response!
   }
 
   type Mutation {
-    createService(service: iService!): Response!
-    updateService(id: ID!, service: iService!): Response!
-    deleteService(id: ID!): Response!
+    createService(service: iService!): SingleResponse!
+    updateService(id: ID!, service: iService!): SingleResponse!
+    deleteService(id: ID!): SingleResponse!
   }
 `

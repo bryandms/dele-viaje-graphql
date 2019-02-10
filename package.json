@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/bryandms/dele-viaje#readme",
   "dependencies": {
+    "apollo-resolvers": "^1.4.1",
     "apollo-server-express": "^2.4.0",
     "bcrypt": "^3.0.4",
     "cors": "^2.8.5",

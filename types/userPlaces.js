@@ -4,6 +4,5 @@ module.exports = `
     rating: Float!
     placeId: Int!
     userId: Int!
-    users: [User]!
   }
 `
