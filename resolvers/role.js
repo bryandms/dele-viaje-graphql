@@ -1,5 +1,5 @@
-const formatErrors = require('../helpers/formatErrors')
 const { isAuthenticatedResolver } = require('../helpers/permissions')
+const baseController = require('../helpers/baseController')
 
 module.exports = {
   Role: {
@@ -8,62 +8,20 @@ module.exports = {
 
   Query: {
     roles: isAuthenticatedResolver.createResolver(
-      async (parent, args, { db }, info) =>
-        db.Role.findAll()
-          .then(data => {
-            return {
-              success: true,
-              data,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: [],
-              errors: formatErrors(err)
-            }
-          })
+      (parent, args, { db }, info) =>
+        baseController.findAll(db.Role)
     )
   },
 
   Mutation: {
     createRole: isAuthenticatedResolver.createResolver(
       (parent, args, { db }, info) =>
-        db.Role.create(args)
-          .then(data => {
-            return {
-              success: true,
-              data,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.create(db.Role, args)
     ),
 
     deleteRole: isAuthenticatedResolver.createResolver(
       (parent, { id }, { db }, info) =>
-        db.Role.destroy({ where: { id } })
-          .then(data => {
-            return {
-              success: data,
-              data: null,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.destroy(db.Role, id, 'role')
     )
   }
 }

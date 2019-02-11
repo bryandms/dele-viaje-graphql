@@ -1,5 +1,5 @@
-const formatErrors = require('../helpers/formatErrors')
 const { isAuthenticatedResolver } = require('../helpers/permissions')
+const baseController = require('../helpers/baseController')
 
 module.exports = {
   Service: {
@@ -9,127 +9,29 @@ module.exports = {
   Query: {
     service: isAuthenticatedResolver.createResolver(
       (parent, { id }, { db }, info) =>
-        db.Service.findByPk(id)
-          .then(data => {
-            if (data) {
-              return {
-                success: true,
-                data: data,
-                errors: []
-              }
-            } else {
-              return {
-                success: false,
-                data: null,
-                errors: [{
-                  path: 'service',
-                  message: 'El servicio que ha solicitado no existe.'
-                }]
-              }
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.findByPk(db.Service, id, 'service')
     ),
 
     services: isAuthenticatedResolver.createResolver(
       (parent, args, { db }, info) =>
-        db.Service.findAll()
-          .then(data => {
-            return {
-              success: true,
-              data: data,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: [],
-              errors: formatErrors(err)
-            }
-          })
+        baseController.findAll(db.Service)
     )
   },
 
   Mutation: {
     createService: isAuthenticatedResolver.createResolver(
       (parent, { service }, { db }, info) =>
-        db.Service.create(service)
-          .then(data => {
-            return {
-              success: true,
-              data: data,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.create(db.Service, service)
     ),
 
     updateService: isAuthenticatedResolver.createResolver(
       (parent, { id, service }, { db }, info) =>
-        db.Service.update(
-          service,
-          {
-            returning: true,
-            where: { id }
-          }
-        )
-          .then(([id, [data]]) => {
-            if (data) {
-              return {
-                success: true,
-                data: data,
-                errors: []
-              }
-            } else {
-              return {
-                success: false,
-                data: null,
-                errors: [{
-                  path: 'service',
-                  message: 'El servicio que intenta actualizar no existe.'
-                }]
-              }
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.update(db.Service, id, service, 'service')
     ),
 
     deleteService: isAuthenticatedResolver.createResolver(
       (parent, { id }, { db }, info) =>
-        db.Service.destroy({ where: { id } })
-          .then(data => {
-            return {
-              success: data,
-              data: null,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.destroy(db.Service, id, 'service')
     )
   }
 }

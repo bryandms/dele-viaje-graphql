@@ -1,6 +1,7 @@
 const formatErrors = require('../helpers/formatErrors')
 const { isAuthenticatedResolver } = require('../helpers/permissions')
 const { login } = require('../helpers/auth')
+const baseController = require('../helpers/baseController')
 
 module.exports = {
   User: {
@@ -15,11 +16,45 @@ module.exports = {
   Query: {
     user: isAuthenticatedResolver.createResolver(
       (parent, { id }, { db }, info) =>
-        db.User.findByPk(id)
-          .then(data => {
+        baseController.findByPk(db.User, id, 'user')
+    ),
+
+    users: isAuthenticatedResolver.createResolver(
+      (parent, args, { db }, info) =>
+        baseController.findAll(db.User)
+    )
+  },
+
+  Mutation: {
+    login: (parent, { email, password }, { db }, info) =>
+      login(email, password, db.User),
+
+    register: (parent, { user }, { db }, info) =>
+      baseController.create(db.User, user),
+
+    addFavPlace: isAuthenticatedResolver.createResolver(
+      (parent, { userId, placeId }, { db }, info) =>
+        baseController.addAssociation(db.User, userId, 'addPlace', placeId)
+    ),
+
+    removeFavPlace: isAuthenticatedResolver.createResolver(
+      (parent, { userId, placeId }, { db }, info) =>
+        baseController.removeAssociation(db.User, userId, 'removePlace', placeId)
+    ),
+
+    setRating: isAuthenticatedResolver.createResolver(
+      (parent, { userPlacesId, rating }, { db }, info) =>
+        db.UserPlaces.update(
+          { rating },
+          {
+            returning: true,
+            where: { id: userPlacesId }
+          }
+        )
+          .then(([id, [userPlace]]) => {
             return {
               success: true,
-              data: data,
+              data: userPlace,
               errors: []
             }
           })
@@ -32,157 +67,14 @@ module.exports = {
           })
     ),
 
-    users: isAuthenticatedResolver.createResolver(
-      (parent, args, { db }, info) =>
-        db.User.findAll()
-          .then(data => {
-            return {
-              success: true,
-              data: data,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: [],
-              errors: formatErrors(err)
-            }
-          })
-      )
-  },
+    addRole: isAuthenticatedResolver.createResolver(
+      (parent, { userId, roleId }, { db }, info) =>
+        baseController.addAssociation(db.User, userId, 'addRole', roleId)
+    ),
 
-  Mutation: {
-    login: (parent, { email, password }, { db }, info) => login(email, password, db.User),
-
-    register: (parent, { user }, { db }, info) =>
-      db.User.create(user)
-        .then(data => {
-          return {
-            success: true,
-            data: data,
-            errors: []
-          }
-        })
-        .catch(err => {
-          return {
-            success: false,
-            data: null,
-            errors: formatErrors(err)
-          }
-        }),
-
-    addFavPlace: async (parent, { userId, placeId }, { db }, info) =>
-      await db.User.findByPk(userId)
-        .then(user =>
-          user.addPlace(placeId, { through: { rating: 0.0 }})
-            .then(() => {
-              return {
-                success: true,
-                data: null,
-                errors: []
-              }
-            })
-            .catch(err => {
-              return {
-                success: false,
-                data: null,
-                errors: formatErrors(err)
-              }
-            })
-        )
-        .catch(err => {
-          return {
-            success: false,
-            data: null,
-            errors: formatErrors(err)
-          }
-        }),
-
-    removeFavPlace: async (parent, { userId, placeId }, { db }, info) =>
-      await db.User.findByPk(userId)
-        .then(user => {
-          const res = user.removePlace(placeId)
-          return {
-            success: res,
-            data: null,
-            errors: []
-          }
-        })
-        .catch(err => {
-          return {
-            success: false,
-            data: null,
-            errors: formatErrors(err)
-          }
-        }),
-
-    setRating: async (parent, { userPlacesId, rating }, { db }, info) =>
-      await db.UserPlaces.update(
-        { rating },
-        {
-          returning: true,
-          where: { id: userPlacesId }
-        }
-      )
-        .then(([id, [userPlace]]) => {
-          return {
-            success: true,
-            data: userPlace,
-            errors: []
-          }
-        })
-        .catch(err => {
-          return {
-            success: false,
-            data: null,
-            errors: formatErrors(err)
-          }
-        }),
-
-    addRole: async (parent, { userId, roleId }, { db }, info) =>
-      await db.User.findByPk(userId)
-        .then(user =>
-          user.addRole(roleId)
-            .then(() => {
-              return {
-                success: true,
-                data: null,
-                errors: []
-              }
-            })
-            .catch(err => {
-              return {
-                success: false,
-                data: null,
-                errors: formatErrors(err)
-              }
-            })
-        )
-        .catch(err => {
-          return {
-            success: false,
-            data: null,
-            errors: formatErrors(err)
-          }
-        }),
-
-    removeRole: async (parent, { userId, roleId }, { db }, info) =>
-      await db.User.findByPk(userId)
-        .then(user => {
-          const res = user.removeRole(roleId)
-          return {
-            success: res,
-            data: null,
-            errors: []
-          }
-        })
-        .catch(err => {
-          return {
-            success: false,
-            data: null,
-            errors: formatErrors(err)
-          }
-        })
+    removeRole: isAuthenticatedResolver.createResolver(
+      (parent, { userId, roleId }, { db }, info) =>
+        baseController.removeAssociation(db.User, userId, 'removeRole', roleId)
+    )
   }
 }

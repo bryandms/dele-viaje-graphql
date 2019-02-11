@@ -1,6 +1,7 @@
 const formatErrors = require('../helpers/formatErrors')
 const { isAuthenticatedResolver } = require('../helpers/permissions')
 const euclidean = require('../helpers/euclideanDistanceAlgorithm')
+const baseController = require('../helpers/baseController')
 
 module.exports = {
   Place: {
@@ -15,40 +16,12 @@ module.exports = {
   Query: {
     place: isAuthenticatedResolver.createResolver(
       (parent, { id }, { db }, info) =>
-        db.Place.findByPk(id)
-          .then(data => {
-            return {
-              success: true,
-              data: data,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.findByPk(db.Place, id, 'place')
     ),
 
     places: isAuthenticatedResolver.createResolver(
       (parent, args, { db }, info) =>
-        db.Place.findAll()
-          .then(data => {
-            return {
-              success: true,
-              data: data,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: [],
-              errors: formatErrors(err)
-            }
-          })
+        baseController.findAll(db.Place)
     ),
 
     findPlaces: (parent, { place }, { db }, info) =>
@@ -72,122 +45,27 @@ module.exports = {
   Mutation: {
     createPlace: isAuthenticatedResolver.createResolver(
       (parent, { place }, { db }, info) =>
-        db.Place.create(place)
-          .then(data => {
-            return {
-              success: true,
-              data: data,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.create(db.Place, place)
     ),
 
     updatePlace: isAuthenticatedResolver.createResolver(
       (parent, { id, place }, { db }, info) =>
-        db.Place.update(
-          place,
-          {
-            returning: true,
-            where: { id }
-          }
-        )
-          .then(([id, [data]]) => {
-            if (data) {
-              return {
-                success: true,
-                data: data,
-                errors: []
-              }
-            } else {
-              return {
-                success: false,
-                data: null,
-                errors: []
-              }
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.update(db.Place, id, place, 'place')
     ),
 
     deletePlace: isAuthenticatedResolver.createResolver(
       (parent, { id }, { db }, info) =>
-        db.Place.destroy({ where: { id } })
-          .then(data => {
-            return {
-              success: data,
-              data: null,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.destroy(db.Place, id, 'place')
     ),
 
     addService: isAuthenticatedResolver.createResolver(
-      async (parent, { serviceId, placeId }, { db }, info) =>
-        await db.Place.findByPk(placeId)
-          .then(place =>
-            place.addService(serviceId)
-              .then(() => {
-                return {
-                  success: true,
-                  data: null,
-                  errors: []
-                }
-              })
-              .catch(err => {
-                return {
-                  success: false,
-                  data: null,
-                  errors: formatErrors(err)
-                }
-              })
-          )
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+      (parent, { serviceId, placeId }, { db }, info) =>
+        baseController.addAssociation(db.Place, placeId, 'addService', serviceId)
     ),
 
     removeService: isAuthenticatedResolver.createResolver(
-      async (parent, { serviceId, placeId }, { db }, info) =>
-        await db.Place.findByPk(placeId)
-          .then(place => {
-            const res = place.removeService(serviceId)
-            return {
-              success: res,
-              data: null,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+      (parent, { serviceId, placeId }, { db }, info) =>
+        baseController.removeAssociation(db.Place, placeId, 'removeService', serviceId)
     )
   }
 }
