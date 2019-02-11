@@ -44,27 +44,7 @@ module.exports = {
 
     setRating: isAuthenticatedResolver.createResolver(
       (parent, { userPlacesId, rating }, { db }, info) =>
-        db.UserPlaces.update(
-          { rating },
-          {
-            returning: true,
-            where: { id: userPlacesId }
-          }
-        )
-          .then(([id, [userPlace]]) => {
-            return {
-              success: true,
-              data: userPlace,
-              errors: []
-            }
-          })
-          .catch(err => {
-            return {
-              success: false,
-              data: null,
-              errors: formatErrors(err)
-            }
-          })
+        baseController.update(db.UserPlaces, userPlacesId, { rating }, 'UserPlaces')
     ),
 
     addRole: isAuthenticatedResolver.createResolver(
