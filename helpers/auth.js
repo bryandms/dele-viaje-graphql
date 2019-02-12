@@ -17,7 +17,7 @@ const auth = {
   },
 
   login: async (email, password, User) => {
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ where: { email } })
 
     if (!user) {
       return {
@@ -47,7 +47,7 @@ const auth = {
 
     return {
       success: true,
-      data: null,
+      data: user,
       errors: [],
       token
     }
