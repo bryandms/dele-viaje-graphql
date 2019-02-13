@@ -30,7 +30,24 @@ module.exports = {
       login(email, password, db.User),
 
     register: (parent, { user }, { db }, info) =>
-      baseController.create(db.User, user),
+      db.User.create(user)
+        .then(user => {
+          db.Role.findOne({ where: { name: 'user' } })
+            .then(role => user.addRole(role))
+
+          return {
+            success: true,
+            data: user,
+            errors: []
+          }
+        })
+        .catch(err => {
+          return {
+            success: false,
+            data: null,
+            errors: formatErrors(err)
+          }
+        }),
 
     addFavPlace: isAuthenticatedResolver.createResolver(
       (parent, { userId, placeId }, { db }, info) =>
