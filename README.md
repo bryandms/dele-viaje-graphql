@@ -7,6 +7,7 @@
 [Why with Graphql?](#why-with-graphql) | [Installation](#installation) | [Contribute](#contribute) | [License](#license)
 
 [:es:](README-ES.md) | [:us:](README.md)
+
 [![license][img-license-badge]][MIT]
 
 </div>
