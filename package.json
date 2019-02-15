@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "sequelize-skeleton": "./node_modules/sequelize-cli/lib/sequelize init:models; ./node_modules/sequelize-cli/lib/sequelize init:config",
-    "init-db": "cd /opt/lampp/bin && echo 'DROP DATABASE IF EXISTS dele_viaje_db; CREATE DATABASE dele_viaje_db CHARACTER SET utf8 COLLATE utf8_general_ci' | ./mysql -u root && cd -"
+    "init-db": "cd /opt/lampp/bin && echo 'DROP DATABASE IF EXISTS dele_viaje_db; CREATE DATABASE dele_viaje_db CHARACTER SET utf8 COLLATE utf8_general_ci' | ./mysql -u root && cd -",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -32,5 +33,9 @@
     "path": "^0.12.7",
     "pg": "^7.8.0",
     "sequelize": "^4.42.0"
+  },
+  "devDependencies": {
+    "easygraphql-tester": "^5.0.0",
+    "mocha": "^5.2.0"
   }
 }
