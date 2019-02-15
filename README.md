@@ -8,7 +8,7 @@
 
 [:es:](README-ES.md) | [:us:](README.md)
 
-[![license][img-license-badge]][MIT]
+[![Build Status][img-travis-ci]][travis-ci] [![license][img-license-badge]][MIT]
 
 </div>
 
@@ -54,4 +54,7 @@ If you find a bug, something to improve, you want to add a new functionality ple
 See [license](LICENSE)
 
 [img-license-badge]:https://img.shields.io/github/license/bryandms/dele-viaje-graphql.svg?label=LICENSE&style=for-the-badge
+[img-travis-ci]:https://img.shields.io/travis/com/bryandms/dele-viaje-graphql.svg?style=for-the-badge
+
 [MIT]:https://opensource.org/licenses/MIT
+[travis-ci]:https://travis-ci.org/bryandms/dele-viaje-graphql
