@@ -42,6 +42,11 @@ Step 5: Run the server.
 npm start
 ```
 
+Step 6: Run the tests.
+```
+npm test
+```
+
 ### Contribute
 If you find a bug, something to improve, you want to add a new functionality please create the issue on GitHub or if you want to create a PR, create it. In this way we help other people who use Dele Viaje.
 

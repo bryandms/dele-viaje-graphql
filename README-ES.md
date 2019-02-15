@@ -42,6 +42,11 @@ Paso 5: Inicie su servidor.
 npm start
 ```
 
+Paso 6: Ejecute las pruebas.
+```
+npm test
+```
+
 ## Contribuir
 Si encuentra un bug, algo por mejorar, desea agregar una nueva funcionalidad, cree el issue en GitHub o si desea crear un PR, créelo. De esta manera ayudamos a las demás personas que usen Dele Viaje.
 
