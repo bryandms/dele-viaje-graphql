@@ -43,7 +43,7 @@ npm start
 ```
 
 ### Contribute
-If you are attracted to this project, you can collaborate.
+If you find a bug, something to improve, you want to add a new functionality please create the issue on GitHub or if you want to create a PR, create it. In this way we help other people who use Dele Viaje.
 
 ### License
 See [license](LICENSE)
