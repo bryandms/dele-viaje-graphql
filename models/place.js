@@ -72,11 +72,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       score: {
         type: DataTypes.DOUBLE,
-        default: 0
+        defaultValue: 0
       },
       votes: {
         type: DataTypes.INTEGER,
-        default: 0
+        defaultValue: 0
       },
       website: DataTypes.STRING,
       phone: DataTypes.INTEGER,
