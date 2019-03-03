@@ -14,10 +14,8 @@ module.exports = {
   },
 
   Query: {
-    place: isAuthenticatedResolver.createResolver(
-      (parent, { id }, { db }, info) =>
-        baseController.findByPk(db.Place, id, 'place')
-    ),
+    place: (parent, { id }, { db }, info) =>
+      baseController.findByPk(db.Place, id, 'place'),
 
     places: isAuthenticatedResolver.createResolver(
       (parent, args, { db }, info) =>

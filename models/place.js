@@ -81,8 +81,14 @@ module.exports = (sequelize, DataTypes) => {
       website: DataTypes.STRING,
       phone: DataTypes.INTEGER,
       email: DataTypes.STRING,
-      schedule: DataTypes.JSON,
-      photos: DataTypes.JSON
+      schedule: {
+        type: DataTypes.JSON,
+        defaultValue: {}
+      },
+      photos: {
+        type: DataTypes.JSON,
+        defaultValue: {}
+      }
     },
     {
       freezeTableName: true
