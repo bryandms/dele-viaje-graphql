@@ -1,21 +1,12 @@
 const serviceQuery = `
   {
     service(id: 1) {
-      success
-      data {
-        ... on Service {
-          id
-          name
-          icon
-          places {
-            name
-          }
-        }
-      }
-      token
-      errors {
-        path
-        message
+      id
+      name
+      icon
+      places {
+        id
+        name
       }
     }
   }
@@ -24,21 +15,12 @@ const serviceQuery = `
 const servicesQuery = `
   {
     services {
-      success
-      data {
-        ... on Service {
-          id
-          name
-          icon
-          places {
-            name
-          }
-        }
-      }
-      token
-      errors {
-        path
-        message
+      id
+      name
+      icon
+      places {
+        id
+        name
       }
     }
   }
@@ -48,26 +30,12 @@ const createServiceMutation = `
   mutation {
     createService (
       service: {
-        name: "Wifi"
-        icon: "wifi"
+        name: "test"
+        icon: "test"
       }
     ){
-      success
-      data {
-        ... on Service {
-          id
-          name
-          icon
-          places {
-            name
-          }
-        }
-      }
-      token
-      errors {
-        path
-        message
-      }
+      id
+      name
     }
   }
 `
@@ -75,54 +43,21 @@ const createServiceMutation = `
 const updateServiceMutation = `
   mutation {
     updateService (
-      id: 1
+      id:3
       service: {
-        name: "Wifi"
-        icon: "wifi icon"
+        name: "test 1"
+        icon: "test 1"
       }
     ){
-      success
-      data {
-        ... on Service {
-          id
-          name
-          icon
-          places {
-            name
-          }
-        }
-      }
-      token
-      errors {
-        path
-        message
-      }
+      id
+      name
     }
   }
 `
 
 const deleteServiceMutation = `
   mutation {
-    deleteService (
-      id: 1
-    ){
-      success
-      data {
-        ... on Service {
-          id
-          name
-          icon
-          places {
-            name
-          }
-        }
-      }
-      token
-      errors {
-        path
-        message
-      }
-    }
+    deleteService (id:3)
   }
 `
 module.exports = {

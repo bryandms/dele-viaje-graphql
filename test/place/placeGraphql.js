@@ -1,21 +1,38 @@
 const findPlacesQuery = `
   {
-    findPlaces(
+    findPlaces (
       place: {
-        province: "Cartago"
+        province: "cartago"
         accessibility: "Lastre"
+        category: "Familiar"
       }
     ){
-      success
-      data {
-        ... on Place {
-          name
-        }
+      id
+      name
+      description
+      latitude
+      longitude
+      province
+      accessibility
+      category
+      score
+      votes
+      website
+      phone
+      email
+      schedule
+      photos
+      users {
+        id
+        username
       }
-      token
-      errors {
-        path
-        message
+      services {
+        id
+        name
+      }
+      userPlaces {
+        id
+        rating
       }
     }
   }
@@ -24,39 +41,32 @@ const findPlacesQuery = `
 const placeQuery = `
   {
     place(id: 1) {
-      success
-      data {
-        ... on Place {
-          id
-          name
-          description
-          latitude
-          longitude
-          province
-          accessibility
-          category
-          score
-          votes
-          website
-          phone
-          email
-          schedule
-          photos
-          users {
-            username
-          }
-          services {
-            name
-          }
-          userPlaces {
-            rating
-          }
-        }
+      id
+      name
+      description
+      latitude
+      longitude
+      province
+      accessibility
+      category
+      score
+      votes
+      website
+      phone
+      email
+      schedule
+      photos
+      users {
+        id
+        username
       }
-      token
-      errors {
-        path
-        message
+      services {
+        id
+        name
+      }
+      userPlaces {
+        id
+        rating
       }
     }
   }
@@ -65,39 +75,32 @@ const placeQuery = `
 const placesQuery = `
   {
     places {
-      success
-      data {
-        ... on Place {
-          id
-          name
-          description
-          latitude
-          longitude
-          province
-          accessibility
-          category
-          score
-          votes
-          website
-          phone
-          email
-          schedule
-          photos
-          users {
-            username
-          }
-          services {
-            name
-          }
-          userPlaces {
-            rating
-          }
-        }
+      id
+      name
+      description
+      latitude
+      longitude
+      province
+      accessibility
+      category
+      score
+      votes
+      website
+      phone
+      email
+      schedule
+      photos
+      users {
+        id
+        username
       }
-      token
-      errors {
-        path
-        message
+      services {
+        id
+        name
+      }
+      userPlaces {
+        id
+        rating
       }
     }
   }
@@ -139,31 +142,37 @@ const createPlaceMutation = `
             cierra: "3:00"
           }
         }
-        photos: {
-          photo1: "https://www.nacion.com/resizer/uWbuiIcALYRB1qtrZMlaiXMK5f0=/600x0/center/middle/filters:quality(100)/arc-anglerfish-arc2-prod-gruponacion.s3.amazonaws.com/public/GYPNDIIYRFFDFINUK5VAWHSHYA.jpg"
-        }
+        photos: [
+          "https://www.nacion.com/resizer/uWbuiIcALYRB1qtrZMlaiXMK5f0=/600x0/center/middle/filters:quality(100)/arc-anglerfish-arc2-prod-gruponacion.s3.amazonaws.com/public/GYPNDIIYRFFDFINUK5VAWHSHYA.jpg"
+        ]
       }
     ){
-      success
-      data {
-        ... on Place {
-          id
-          name
-          users {
-            username
-          }
-          services {
-            name
-          }
-          userPlaces {
-            rating
-          }
-        }
+      id
+      name
+      description
+      latitude
+      longitude
+      province
+      accessibility
+      category
+      score
+      votes
+      website
+      phone
+      email
+      schedule
+      photos
+      users {
+        id
+        username
       }
-      token
-      errors {
-        path
-        message
+      services {
+        id
+        name
+      }
+      userPlaces {
+        id
+        rating
       }
     }
   }
@@ -206,31 +215,37 @@ const updatePlaceMutation = `
             cierra: "3:00"
           }
         }
-        photos: {
-          photo1: "https://www.nacion.com/resizer/uWbuiIcALYRB1qtrZMlaiXMK5f0=/600x0/center/middle/filters:quality(100)/arc-anglerfish-arc2-prod-gruponacion.s3.amazonaws.com/public/GYPNDIIYRFFDFINUK5VAWHSHYA.jpg"
-        }
+        photos: [
+          "https://www.nacion.com/resizer/uWbuiIcALYRB1qtrZMlaiXMK5f0=/600x0/center/middle/filters:quality(100)/arc-anglerfish-arc2-prod-gruponacion.s3.amazonaws.com/public/GYPNDIIYRFFDFINUK5VAWHSHYA.jpg"
+        ]
       }
     ){
-      success
-      data {
-        ... on Place {
-          id
-          name
-          users {
-            username
-          }
-          services {
-            name
-          }
-          userPlaces {
-            rating
-          }
-        }
+      id
+      name
+      description
+      latitude
+      longitude
+      province
+      accessibility
+      category
+      score
+      votes
+      website
+      phone
+      email
+      schedule
+      photos
+      users {
+        id
+        username
       }
-      token
-      errors {
-        path
-        message
+      services {
+        id
+        name
+      }
+      userPlaces {
+        id
+        rating
       }
     }
   }
@@ -238,91 +253,25 @@ const updatePlaceMutation = `
 
 const deletePlaceMutation = `
   mutation {
-    deletePlace(id: 1) {
-      success
-      data {
-        ... on Place {
-          id
-          name
-          users {
-            username
-          }
-          services {
-            name
-          }
-          userPlaces {
-            rating
-          }
-        }
-      }
-      token
-      errors {
-        path
-        message
-      }
-    }
+    deletePlace(id: 5)
   }
 `
 
 const addServiceMutation = `
   mutation {
-    addService(
+    addService (
       serviceId: 1
       placeId: 1
-    ){
-      success
-      data {
-        ... on Place {
-          id
-          name
-          users {
-            username
-          }
-          services {
-            name
-          }
-          userPlaces {
-            rating
-          }
-        }
-      }
-      token
-      errors {
-        path
-        message
-      }
-    }
+    )
   }
 `
 
 const removeServiceMutation = `
   mutation {
-    removeService(
+    removeService (
       serviceId: 1
       placeId: 1
-    ){
-      success
-      data {
-        ... on Place {
-          id
-          name
-          users {
-            username
-          }
-          services {
-            name
-          }
-          userPlaces {
-            rating
-          }
-        }
-      }
-      token
-      errors {
-        path
-        message
-      }
-    }
+    )
   }
 `
 
