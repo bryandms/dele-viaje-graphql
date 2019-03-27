@@ -3,21 +3,24 @@ module.exports = `
   type Role {
     "The role id."
     id: ID!
+
     "The role name."
     name: String!
+
     "Users who have the role."
     users: [User]!
   }
 
   type Query {
     "Get all roles."
-    roles: Response!
+    roles: [Role]!
   }
 
   type Mutation {
     "Create a new role."
-    createRole(name: String!): SingleResponse!
+    createRole(name: String!): Role
+
     "Delete a role."
-    deleteRole(id: ID!): SingleResponse!
+    deleteRole(id: ID!): Boolean
   }
 `

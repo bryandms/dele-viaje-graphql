@@ -1,5 +1,5 @@
 {
-  "name": "dele-viaje",
+  "name": "dele-viaje-graphql",
   "version": "2.0.0",
   "description": "Graphql API to recommend tourist sites based on user search criteria.",
   "main": "index.js",
@@ -13,8 +13,8 @@
     "type": "git",
     "url": "git+https://github.com/bryandms/dele-viaje.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "bryandms",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/bryandms/dele-viaje/issues"
   },

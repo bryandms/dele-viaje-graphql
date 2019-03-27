@@ -19,36 +19,18 @@ const auth = {
   login: async (email, password, User) => {
     const user = await User.findOne({ where: { email } })
 
-    if (!user) {
-      return {
-        success: false,
-        data: null,
-        errors: [{
-          path: 'email',
-          message: 'Las credenciales son incorrectas.'
-        }]
-      }
-    }
+    if (!user)
+      throw new Error('Las credenciales son incorrectas.')
 
     const validPassword = await bcrypt.compare(password, user.password)
 
-    if (!validPassword) {
-      return {
-        success: false,
-        data: null,
-        errors: [{
-          path: 'email',
-          message: 'Las credenciales son incorrectas.'
-        }]
-      }
-    }
+    if (!validPassword)
+      throw new Error('Las credenciales son incorrectas.')
 
     const token = auth.getToken(user)
 
     return {
-      success: true,
-      data: user,
-      errors: [],
+      user,
       token
     }
   }
