@@ -19,7 +19,16 @@ module.exports = (sequelize, DataTypes) => {
           }
         }
       },
-      description: DataTypes.STRING,
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            args: true,
+            msg: 'La descripción es requerida.'
+          }
+        }
+      },
       latitude: {
         type: DataTypes.FLOAT,
         allowNull: false,

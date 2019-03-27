@@ -1,4 +1,3 @@
-const formatErrors = require('../helpers/formatErrors')
 const { isAuthenticatedResolver } = require('../helpers/permissions')
 const { login } = require('../helpers/auth')
 const baseController = require('../helpers/baseController')
@@ -36,16 +35,8 @@ module.exports = {
             .then(role => user.addRole(role))
 
           return {
-            success: true,
-            data: user,
-            errors: []
-          }
-        })
-        .catch(err => {
-          return {
-            success: false,
-            data: null,
-            errors: formatErrors(err)
+            token: null,
+            user
           }
         }),
 

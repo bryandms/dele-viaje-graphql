@@ -8,14 +8,7 @@ const baseResolver = createResolver(
 const isAuthenticatedResolver = baseResolver.createResolver(
   (parent, args, { user }) => {
     if (!user)
-      return {
-        success: false,
-        data: [],
-        errors: [{
-          path: 'auth',
-          message: 'No estás autenticado.'
-        }]
-      }
+      throw new Error('No estás autenticado.')
   }
 )
 

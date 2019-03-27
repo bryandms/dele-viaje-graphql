@@ -24,8 +24,10 @@ const app = express()
 app.use(cors(), middleware)
 server.applyMiddleware({ app })
 
+const PORT = process.env.PORT
+
 db.sequelize.sync({}).then(() => {
-  app.listen(process.env.PORT, () =>
-    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
+  app.listen(PORT, () =>
+    console.log(`Server ready at http://localhost:${PORT}${server.graphqlPath}`)
   )
 })
